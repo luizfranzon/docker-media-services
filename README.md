@@ -1,6 +1,7 @@
 # media-services
 
 ```yaml
+version: "3.9"
 name: media-services
 services:
   prowlarr:
@@ -15,7 +16,8 @@ services:
     ports:
       - 9696:9696
     networks:
-      - media
+      media:
+        ipv4_address: 172.20.0.2
     restart: unless-stopped
 
   radarr:
@@ -32,7 +34,8 @@ services:
     ports:
       - 7878:7878
     networks:
-    - media
+      media:
+        ipv4_address: 172.20.0.3
     restart: unless-stopped
 
   sonarr:
@@ -43,13 +46,14 @@ services:
       - PGID=1000
       - TZ=America/Sao_Paulo
     volumes:
-        - D:/sonarr/config:/config
-        - D:/sonarr/tv:/tv
-        - D:/downloads:/downloads
+      - D:/sonarr/config:/config
+      - D:/sonarr/tv:/tv
+      - D:/downloads:/downloads
     ports:
       - 8989:8989
     networks:
-      - media
+      media:
+        ipv4_address: 172.20.0.4
     restart: unless-stopped
 
   flaresolverr:
@@ -61,10 +65,16 @@ services:
     ports:
       - 8191:8191
     networks:
-      - media
+      media:
+        ipv4_address: 172.20.0.5
     restart: unless-stopped
 
 networks:
   media:
     driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+          gateway: 172.20.0.1
+
 ```
